@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block css %}
+    <link href="{{url_for('static',filename='css/index.css')}}" rel='stylesheet'>
+{% endblock css %}
+{% block js %}
+    <script src="{{ url_for('static',filename='js/index.js') }}"></script>
+{% endblock js %}
+
+{% block content %}
+    <div id="table">
+      <div id="total">
+        {% for i in range(total|length) %}
+          <div class="box" style="grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
+            {{ total[i][0] }}<br> {{ total[i][1][0] }}<br>(+{{ total[i][1][1] }})
+          </div>
+        {%endfor%}
+      </div>
+
+      <div id="stategrid">
+        {% for i in range(numbers|length) %}
+          {% for j in range(numbers[i]|length) %}
+            <div class="state" style="grid-row: {{i+1}} ;grid-column:{{j+1}};">
+              {{numbers[i][j]}}
+            </div>
+          {% endfor %}
+        {% endfor %}
+        
+    </div>
+{% endblock content %}

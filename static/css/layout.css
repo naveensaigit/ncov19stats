@@ -1,0 +1,68 @@
+body{
+    font-family: 'Arvo', serif;
+    margin:0;
+  }
+  
+  a{
+    text-decoration: none;
+    color:black;
+  }
+  
+  .alc{
+    text-align: center;
+  }
+  .logo{
+    margin:0 0 30px 0;
+    height:70px;
+    position:relative;
+    text-align: center;
+    font-weight: 700;
+    font-size:220%;
+    background-image: linear-gradient(180deg,orange,white,green);
+  }
+  
+  .virus{
+    vertical-align: text-bottom;
+    height:50px;
+    width:50px;
+  }
+  
+  #navbar{
+    width:90vw;
+    margin:0 auto;
+    font-size: 140%;
+    box-shadow: 0 0 15px gray;
+    text-align: center;
+    border-radius: 10px;
+  }
+  
+  #navbar a{
+    display:inline-block;
+    padding:11px 15px;
+    text-align: center;
+  }
+  
+  #navbar a:hover{
+   background-color: rgb(206, 204, 204);
+  }
+
+  @media (max-width:670px)
+  {
+    body{
+      font-size:80%;
+    }
+    .virus{
+      padding-top:5px;
+      height:40px;
+      width:40px;
+    }
+    #navbar{
+      margin:0 5vw;
+    }
+    #navbar a{
+      padding:11px 5px;
+    }
+    #navbar a:nth-child(2),#navbar a:nth-child(3),#navbar a:nth-child(4){
+      padding:18px 5px 11px 5px;
+    }
+  }  
