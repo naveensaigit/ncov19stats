@@ -1,1 +1,1 @@
-web: gunicorn ncov19stats\app:app 
+web: gunicorn app:app 
