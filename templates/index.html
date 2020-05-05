@@ -10,18 +10,34 @@
     <div id="table">
       <div id="total">
         {% for i in range(total|length) %}
-          <div class="box" style="grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
-            {{ total[i][0] }}<br> {{ total[i][1][0] }}<br>(+{{ total[i][1][1] }})
-          </div>
+          {% if total[i][1]|length == 2 %}
+            <div class="box" style="grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
+              {{ total[i][0] }}<br> {{ total[i][1][0] }}<br>(+{{ total[i][1][1] }})
+            </div>
+          {% else %}
+            <div class="box" style="grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
+              {{ total[i][0] }}<br> {{ total[i][1][0] }}<br><br>
+            </div>
+          {% endif %}
         {%endfor%}
       </div>
 
       <div id="stategrid">
         {% for i in range(numbers|length) %}
           {% for j in range(numbers[i]|length) %}
+            {% if numbers[i][j]|length==2 %}
+              <div class="state" style="grid-row: {{i+1}} ;grid-column:{{j+1}};">
+                {{numbers[i][j][0]}} (+{{numbers[i][j][1]}})
+              </div>
+            {% elif numbers[i][j][0] is integer %}
             <div class="state" style="grid-row: {{i+1}} ;grid-column:{{j+1}};">
-              {{numbers[i][j]}}
+              {{numbers[i][j][0]}}
             </div>
+            {% else %}
+              <div class="state" style="grid-row: {{i+1}} ;grid-column:{{j+1}};">
+                {{numbers[i][j]}}
+              </div>
+            {% endif %}
           {% endfor %}
         {% endfor %}
         
