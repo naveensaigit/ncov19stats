@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
+from datetime import date,datetime,timedelta
 import datetime
 
 states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh',
- 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Delhi','Daman and Diu','Goa', 'Gujarat',
+ 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Delhi','Dadra and Nagar Haveli and Daman and Diu','Goa', 'Gujarat',
  'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka',
  'Kerala', 'Ladakh','Lakshadweep' , 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',
  'Mizoram', 'Nagaland','Odisha', 'Puducherry', 'Punjab', 'Rajasthan','Sikkim',
@@ -12,7 +13,8 @@ states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh',
 stind=pd.Series(range(len(states)),states)
 
 stdate=np.datetime64('2020-01-30')
-dates=np.arange(np.datetime64('2020-01-30'),np.datetime64('2020-04-27'))
+enddate=np.datetime64((datetime.datetime.utcnow()+datetime.timedelta(hours=5,minutes=30)).date())
+dates=np.arange(np.datetime64('2020-01-30'),enddate)
 
 def datechange(date):
     date=date.split('/')
@@ -72,22 +74,46 @@ for row in rec:
         timeseries[stind[row[0]]][int(str(row[1]-stdate).split()[0])][1]+=1
     elif row[2]=='Deceased':
         timeseries[stind[row[0]]][int(str(row[1]-stdate).split()[0])][2]+=1
-        
+
+with urllib.request.urlopen("https://api.covid19india.org/raw_data3.json") as url:
+    data = json.loads(url.read().decode())
+    
+df=[]    
+for row in data["raw_data"]:
+    df.append(row.values())
+df=pd.DataFrame(df,columns=data["raw_data"][0].keys())
+
+time=[]
+for row in data['raw_data']:
+    if row["detectedstate"]!='' and row["currentstatus"]!='' and row["numcases"]!='':
+        time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
+
+for row in time:
+    if row[1]==enddate:
+        continue
+    if row[2]=='Hospitalized':
+        ind=0
+    elif row[2]=='Recovered':
+        ind=1
+    else:
+        ind=2
+    timeseries[stind[row[0]]][int(str(row[1]-stdate).split()[0])][ind]+=row[3]
+
+    
 for i in range(len(timeseries)):
     timeseries[i]=cuml(timeseries[i])
-
+    
+#For Nation-Wide cases, Total
 for i in range(len(timeseries)-1):
     for j in range(len(timeseries[i])):
         for k in range(7):        
             timeseries[-1][j][k]+=timeseries[i][j][k]
-
+            
 from models import state
 from app import db
 
 for i in range(len(timeseries)):
     for j in range(len(dates)):
-        db.session.add(state(statename=states[i],date= datetime.datetime.strptime(str(dates[j]),'%Y-%m-%d'),dailyconf=timeseries[i][j][0],dailyrec=timeseries[i][j][1],
-        dailydec=timeseries[i][j][2],cumconf=timeseries[i][j][3],cumact=timeseries[i][j][4],cumrec=timeseries[i][j][5],
-        cumdec=timeseries[i][j][6]))
+        db.session.add(state(statename=states[i],date= datetime.datetime.strptime(str(dates[j]),'%Y-%m-%d').date(),dailyconf=timeseries[i][j][0],dailyrec=timeseries[i][j][1], dailydec=timeseries[i][j][2],cumconf=timeseries[i][j][3],cumact=timeseries[i][j][4],cumrec=timeseries[i][j][5], cumdec=timeseries[i][j][6]))
 
 db.session.commit()
