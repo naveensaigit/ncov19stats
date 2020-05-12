@@ -26,34 +26,6 @@ function changeText(scwth)
     }
 }
 
-function changeColor()
-{
-  // var x=document.getElementsByClassName('state');
-  // for(var i=0;i<x.length;i++) 
-  // {
-  //   if(i%5==0)
-  //     x[i].style.color="rgb(7, 106, 240)";
-  //   if(i%5==1)
-  //     x[i].style.color="rgb(255, 123, 0)";
-  //   if(i%5==2)
-  //     x[i].style.color="rgb(255, 0, 0)";
-  //   if(i%5==3)
-  //     x[i].style.color="rgb(50,205,50)";
-  //   if(i%5==4)
-  //     x[i].style.color="rgb(77, 75, 75)";
-  // }
-  var x=document.getElementsByClassName('increase');
-  for(var i=0;i<x.length;i++)
-  {
-    if(i%3==0)
-       x[i].style.color="rgb(255, 123, 0)";
-   if(i%3==1)
-     x[i].style.color="rgb(50,205,50)";
-   if(i%3==2)
-     x[i].style.color="rgb(100, 100, 100)";
-  }
-}
-
 //Bokeh Plot variables
 var doc_id="e6966378-2024-4dd6-ac89-dc9156ead24c";  //Dict key of script
 var script_id="14473";  //Script tag ID
@@ -66,11 +38,12 @@ function changePlot(cumconf,cumact,cumrec,cumdec,oldconf,oldrec,olddec,newconf,n
   d=data[doc_id]["roots"]["references"];
 
   var dt=new Date();
-  dt.setHours(0);
-  dt.setMinutes(0);
+  dt.setDate(dt.getDate()-1);
+  dt.setHours(5);
+  dt.setMinutes(30);
   dt.setSeconds(0);
   dt.setMilliseconds(0);
-
+  console.log(dt);
   for(var i=1;i<d.length;i++)
   {
     if(d[i]["type"]=="ColumnDataSource")
@@ -114,7 +87,7 @@ function changePlot(cumconf,cumact,cumrec,cumdec,oldconf,oldrec,olddec,newconf,n
     if(d[i]["type"]=="DateRangeSlider")
     {
         d[i]["attributes"]["end"]=dt.setMilliseconds(0);
-        d[i]["attributes"]["value"]["1"]=dt.setSeconds(0);
+        d[i]["attributes"]["value"]["1"]=dt.setMilliseconds(0);
     }
   }
   data[doc_id]["roots"]["references"]=d;
@@ -162,6 +135,19 @@ function showPlot()
   })();
   setTimeout(centerAlignSlider, 300);
 }
+
+function centerAlignSlider(){
+  var x=document.getElementsByClassName('bk bk-input-group'); 
+  for(var i=0;i<x.length;i++)
+  x[i].style.marginLeft=String(($('#plots').width()-parseInt(x[0].parentElement.style.width))/2)+"px";
+}
+
+function centerDropDown(){
+  var x=document.getElementById('table').style.width;
+  var y=document.getElementById('drop');
+  y.style.marginRight=($(window).width()-(x+461.2))/2;
+}
+
 function disableToolBar()
 {
   $('#'+plot_div_id).html('');
@@ -176,20 +162,8 @@ function disableToolBar()
   showPlot();
 }
 
-function centerAlignSlider(){
-  var x=document.getElementsByClassName('bk bk-input-group'); 
-  for(var i=0;i<x.length;i++)
-  x[i].style.marginLeft=String(($('#plots').width()-parseInt(x[0].parentElement.style.width))/2)+"px";
-}
-
 $(document).ready(function(){
     changeText($(window).width());
-    //changeColor();
-    if(isTouchDevice())
-    {
-      console.log('Disabled Toolbar');
-      disableToolBar();
-    }
 });
 $(window).resize(function() {
     changeText($(window).width());

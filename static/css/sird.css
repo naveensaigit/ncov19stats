@@ -1,3 +1,121 @@
-#sird{
-    width:400px;
+#text{
+    margin:30px 50px;
+    font-size:140%;
+}
+
+#plots{
+    width:750px;
+    height:350px;
+    margin:40px auto;
+    text-align: center;
+}
+
+#predict{
+    margin:15px;
+    font-weight:lighter;
+    font-size:0.9em;
+    height:1220px;
+}
+
+#predplots{
+    float:right;
+    width:600px;
+    margin:-1070px 20px 0 0;
+}
+
+#table{
+    width:55%;
+    display:grid;
+    grid-template-columns: repeat(8,1fr);
+    grid-auto-rows:40px;
+    text-align: center;
+    grid-gap: 3px;
+    margin:50px 0;
+}
+
+#table1{
+    width:55%;
+    display:grid;
+    grid-template-columns: repeat(5,1fr);
+    grid-auto-rows:40px;
+    text-align: center;
+    grid-gap: 3px;
+    margin:0 0 50px 0;
+}
+
+.item{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:rgba(228, 231, 231, 0.349);
+    border-radius:5px;
+    padding-left:0px;
+    padding-right:0px;
+    border-radius:5px;
+}
+#disclaimer{
+    width:55%;
+    margin:0 auto;
+    margin-bottom:30px;
+}
+
+@media (max-width:1500px){
+    h1{
+        text-align: center;
+    }
+    #predict{
+        height:2200px;
+        margin-right:0;
+        margin-left:0;
+    }
+    #predplots{
+        float:none;
+        width:600px;
+        margin:25px auto;
+    }
+    #table,#table1{
+        margin-left:22.5%;
+    }
+} 
+
+@media (max-width:900px)
+{
+    #table,#table1{
+        width:80%;
+        margin-left:10%;
+    }
+    #disclaimer{
+        width:70%;
+    }
+}
+
+@media (max-width:750px){
+    #plots{
+        width:100%;
+        margin-left:0;
+        margin-right:0;
+    }
+    #text{
+        margin:30px 15px;
+    }
+}
+
+@media (max-width:650px)
+{
+    #predplots{
+        float:none;
+        width:100%;
+        margin:25px 0;
+    }
+
+    #table,#table1{
+        width:96%;
+        margin-left:2%;
+    }
+    #text{
+        margin:30px 5px;
+    }
+    #disclaimer{
+        width:90%;
+    }
 }

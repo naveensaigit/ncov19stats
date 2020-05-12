@@ -5,13 +5,11 @@ function menuChange(scwth)
     {
         x[0].innerHTML='<i class="material-icons" style="vertical-align:sub;font-size:150%;">home</i>';
         x[1].innerHTML='SIRD';
-        x[4].innerHTML='<i class="material-icons" style="vertical-align:sub;font-size:150%;">help_outline</i>';
     }
     else
     {
         x[0].innerHTML='Home';
         x[1].innerHTML='SIRD Model';
-        x[4].innerHTML='About';
     }
 }
 

@@ -13,13 +13,13 @@ def datechange(date):
     s=date[2]+'-'+date[1]+'-'+date[0]
     return np.datetime64(s)
 
-states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh',   'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Delhi','Dadra and Nagar Haveli and Daman and Diu','Goa', 'Gujarat',  'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka',    'Kerala', 'Ladakh','Lakshadweep' , 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',    'Mizoram', 'Nagaland','Odisha', 'Puducherry', 'Punjab', 'Rajasthan','Sikkim',    'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',    'West Bengal','Total']
+states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh','Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Delhi','Dadra and Nagar Haveli and Daman and Diu','Goa', 'Gujarat',  'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka',    'Kerala', 'Ladakh','Lakshadweep' , 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',    'Mizoram', 'Nagaland','Odisha', 'Puducherry', 'Punjab', 'Rajasthan','Sikkim',    'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',    'West Bengal','Total']
 stind=pd.Series(range(len(states)),states)
-today=(datetime.utcnow()+timedelta(hours=5,minutes=30)).date()
+today=(datetime.utcnow()).date()
 
 def update_cases():
     #Reading from API for today's new cases or update in last 2 days cases
-    with urllib.request.urlopen("https://api.covid19india.org/raw_data3.json") as url:
+    with urllib.request.urlopen("https://api.covid19india.org/raw_data4.json") as url:
         data = json.loads(url.read().decode())
 
     '''For testing
@@ -28,9 +28,9 @@ def update_cases():
         df.append(row.values())
     df=pd.DataFrame(df,columns=data["raw_data"][0].keys())'''
 
-    db.session.execute("delete from state where date='{0}'".format(date.today()-timedelta(days=2)))
+    db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=2)))
     db.session.commit()
-
+    
     time=[]
     for row in data['raw_data']:
         if row["dateannounced"]=="":

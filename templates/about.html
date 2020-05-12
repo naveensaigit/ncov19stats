@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block css %}
+{% endblock %}
+{% block js %}
+{% endblock %}
+{% block content %}
+    <div style="margin:30px;line-height: 27px;font-size:1.2em;">
+        <h2>About</h2>
+        <p>While there are many websites reporting the number of cases, I could not find any that try to predict the number of cases. Thus, this website was made. If you liked the website, please share it. If you would like to contribute to the project, head to the GitHub Repository! </p>
+        <a target="to_blank" href="https://github.com/naveensaigit/ncov19stats"><img height="70" width="70" src="{{url_for('static',filename='images/git.svg')}}"></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.facebook.com/sharer/sharer.php?u=ncov19stats.herokuapp.com" target="_blank"><img height="70" width="70" src="{{url_for('static',filename='images/fb.png')}}"></a>
+        <h2>Sources</h2>
+        <p>
+            &#9654;&nbsp;&nbsp;Data : COVID19 API - <a target="to_blank" style="color:blue;" href="https://api.covid19india.org/">api.covi19india.org</a><br>
+            &#9654;&nbsp;&nbsp;SIRD Model - <br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1. Explanatory Video on YouTube by 3Blue1Brown - <a style="color:blue;" target="to_blank" href="https://www.youtube.com/watch?v=gxAaO2rsdIs">Simulating an Epidemic</a><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2. Another Youtube Video - <a style="color:blue;" target="to_blank" href="https://www.youtube.com/watch?v=Qrp40ck3WpI">The MATH behind Epidemics</a><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3. Research Paper - <a style="color:blue;" target="to_blank" href="https://www.researchgate.net/publication/340078430_Chinese_and_Italian_COVID-19_outbreaks_can_be_correctly_described_by_a_modified_SIRD_model">SIRD Model for China and Italy</a>
+        </p>
+    </div>
+{% endblock %}

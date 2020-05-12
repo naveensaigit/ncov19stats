@@ -1,5 +1,6 @@
 from flask import url_for,render_template,redirect,Flask,flash,request,session
 from flask_sqlalchemy import SQLAlchemy
+from sird import ret
 from datetime import date,timedelta,datetime
 import pandas as pd
 import numpy as np
@@ -12,6 +13,8 @@ app.config['SQLALCHEMY_DATABASE_URI']='postgres://argdrfltcflwwn:81b4ca0e08de037
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
 today=(datetime.utcnow()).date()
+n=(np.datetime64(today)-np.datetime64('2020-01-30')-1)/np.timedelta64(1,'D')
+end=1580342400000.0+n*86400000
 
 db=SQLAlchemy(app)
 
@@ -82,6 +85,12 @@ def statewise(todaycases):
         numbers.append([i.statename,[i.cumconf+temp[0],temp[0]],[i.cumact+temp[0]-temp[1]-temp[2]],[i.cumrec+temp[1],temp[1]],[i.cumdec+temp[2],temp[2]]])
     res=numbers[1]
     del numbers[1]
+    for i in range(1,len(numbers)):
+        for j in range(1,len(numbers)):
+            if numbers[i][1][0]>numbers[j][1][0]:
+                temp=numbers[i]
+                numbers[i]=numbers[j]
+                numbers[j]=temp
     numbers.append(res)
 statewise(todaycases)
 
@@ -101,6 +110,17 @@ def plotdata():
     return plotdict
 plotdict=plotdata()
 
+plotsird=ret()
+temp=np.array(plotdict['Total'])
+plotsird.append(list(temp[0].astype(int)))
+plotsird.append(list(temp[2].astype(int)))
+plotsird.append(list(temp[3].astype(int)))
+plotsird.append([nptodt(x) for x in np.arange(np.datetime64(today),np.datetime64(today)+10)])
+plotsird.append(list(temp[0].astype(int)-temp[2].astype(int)-temp[3].astype(int)))
+plotsird.append([nptodt(x) for x in np.arange(np.datetime64('2020-01-30'),np.datetime64(today))])
+plotsird.append([1580342400000.0+x*86400000 for x in range(int(n+1))])
+
+
 colors=[['color:rgb(255, 123, 0)','background-color:rgba(255, 123, 0,0.2)'],['color:rgb(255, 0, 0)','background-color:rgba(255, 0, 0,0.2)'],
 ['color:rgb(50,205,50)','background-color:rgba(50,205,50,0.2)'],['color:rgb(77, 75, 75)','background-color:rgba(77, 75, 75,0.2)']]
 
@@ -108,15 +128,19 @@ colors=[['color:rgb(255, 123, 0)','background-color:rgba(255, 123, 0,0.2)'],['co
 
 @app.route('/')
 def home():
-    return render_template('index.html',numbers=numbers,total=total,plotdict=plotdict,states=states,colors=colors)
+    return render_template('index.html',numbers=numbers,total=total,plotdict=plotdict,states=states,colors=colors,end=end)
 
 @app.route('/SIRD')
 def sird():
-    return render_template('sird.html',title='SIRD Model')
+    return render_template('sird.html',title='SIRD Model',plotsird=plotsird,n=int(n))
 
 @app.route('/stats')
 def stats():
-    return 'stats'
+    return render_template('stats.html',title='Statistics')
+
+@app.route('/about')
+def about():
+    return render_template('about.html',title='About')
 
 if __name__=="__main__":
     app.run(debug=True)
