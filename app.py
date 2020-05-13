@@ -9,7 +9,7 @@ import json
 
 app=Flask(__name__,static_url_path='/public')
 app.config['SECRET_KEY']='nlakengdpovhidgbarabgrk0x1'
-app.config['SQLALCHEMY_DATABASE_URI']='postgres://argdrfltcflwwn:81b4ca0e08de0376310bd4da065b38f68d3f09234fadcace5b8f7b0aa6c146b9@ec2-54-81-37-115.compute-1.amazonaws.com:5432/d54l0l0nemto94'
+app.config['SQLALCHEMY_DATABASE_URI']='postgres://vznhvokezemmep:42d3129396b3c9755ca63f9ff2eed1c0ca0dc86a3e20a62164430e239cf18a96@ec2-3-216-129-140.compute-1.amazonaws.com:5432/d4lpe368cptbgn'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
 today=(datetime.utcnow()).date()
