@@ -117,9 +117,70 @@ plotsird.append(list(temp[2].astype(int)))
 plotsird.append(list(temp[3].astype(int)))
 plotsird.append([nptodt(x) for x in np.arange(np.datetime64(today),np.datetime64(today)+10)])
 plotsird.append(list(temp[0].astype(int)-temp[2].astype(int)-temp[3].astype(int)))
-plotsird.append([nptodt(x) for x in np.arange(np.datetime64('2020-01-30'),np.datetime64(today))])
-plotsird.append([1580342400000.0+x*86400000 for x in range(int(n+1))])
+labels=[nptodt(x) for x in np.arange(np.datetime64('2020-01-30'),np.datetime64(today))]
+plotsird.append(labels)
+dtms=[1580342400000.0+x*86400000 for x in range(int(n+1))]
+plotsird.append(dtms)
 
+def stats():
+    drate={}
+    grate={}
+    r0={}
+    for state in states:
+        if state=='Total':
+            continue
+        res=db.session.execute("select cumconf,cumrec,cumdec from state where statename='{0}'".format(state)).fetchall()
+        res=np.array(res)
+        arr=res[:,0]
+        if(int(arr[-1])==0):
+            continue
+        arr1=res[:,1]
+        arr2=res[:,2]
+        cdb=np.zeros(len(arr),dtype=int)
+        rdb=np.zeros(len(arr),dtype=int)
+        ddb=np.zeros(len(arr),dtype=int)
+        for i in range(len(arr)):
+            for j in range(i):
+                if float(arr[j])>=float(arr[i])/2:
+                    cdb[i]+=(i-j)
+                    break
+            for j in range(i):
+                if float(arr1[j])>=float(arr1[i])/2:
+                    rdb[i]+=(i-j)
+                    break
+            for j in range(i):
+                if float(arr2[j])>=float(arr2[i])/2:
+                    ddb[i]+=(i-j)
+                    break
+        temp=[]
+        for i in cdb:
+            if i:
+                temp.append(1+11.5*0.693/i)
+            else:
+                temp.append(1)
+        r0.update({state:temp})
+        drate.update({state:[list(cdb),list(rdb),list(ddb)]})
+        temp=[]
+        gry=(arr[-1]-arr[-2])/arr[-2]
+        grdby=(arr[-2]-arr[-3])/arr[-3]
+        temp.append([gry,gry-grdby])
+        gry=(arr1[-1]-arr1[-2])/arr1[-2]
+        grdby=(arr1[-2]-arr1[-3])/arr1[-3]
+        temp.append([gry,gry-grdby])
+        gry=0
+        grdby=0
+        if(int(arr2[-2])!=0 and int(arr2[-1])!=0):
+            gry=(arr2[-1]-arr2[-2])/arr2[-2]
+        if(int(arr2[-3])!=0 and int(arr2[-2]!=0)):
+            grdby=(arr2[-2]-arr2[-3])/arr2[-3]
+        temp.append([gry,gry-grdby])
+        grate.update({state:temp})
+    return drate,grate,r0
+drate,grate,r0=stats()
+
+statdict={}
+for i in range(1,len(numbers)):
+    statdict.update({numbers[i][0]:numbers[i][1:]})
 
 colors=[['color:rgb(255, 123, 0)','background-color:rgba(255, 123, 0,0.2)'],['color:rgb(255, 0, 0)','background-color:rgba(255, 0, 0,0.2)'],
 ['color:rgb(50,205,50)','background-color:rgba(50,205,50,0.2)'],['color:rgb(77, 75, 75)','background-color:rgba(77, 75, 75,0.2)']]
@@ -136,7 +197,7 @@ def sird():
 
 @app.route('/stats')
 def stats():
-    return render_template('stats.html',title='Statistics')
+    return render_template('stats.html',title='Statistics',total=statdict,colors=colors,drate=drate,grate=grate,r0=r0,labels=labels,dtms=dtms)
 
 @app.route('/about')
 def about():

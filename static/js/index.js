@@ -164,6 +164,9 @@ function disableToolBar()
 
 $(document).ready(function(){
     changeText($(window).width());
+    var x=document.getElementsByClassName('state');
+    for(var i=0;i<5;i++)
+    x[i].style.fontWeight="900";
 });
 $(window).resize(function() {
     changeText($(window).width());

@@ -3,15 +3,6 @@
     <link href="{{url_for('static',filename='css/index.css')}}" rel='stylesheet'>
 {% endblock css %}
 {% block js %}
-
-    <!-- Load React. -->
-  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-
-  <!-- Load React component. -->
-  <!-- <script src="{{url_for('static',filename='js/App.js')}}"></script> -->
-
   <script src="{{ url_for('static',filename='js/index.js') }}"></script>
 {% endblock js %}
 
@@ -53,11 +44,11 @@
       <div id="total">
         {% for i in range(total|length) %}
           {% if total[i][1]|length == 2 %}
-            <div class="box" style="grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
+            <div class="box" style="font-weight:600;grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
               {{ total[i][0] }}<br> {{ total[i][1][0] }}<br>(+{{ total[i][1][1] }})
             </div>
           {% else %}
-            <div class="box" style="grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
+            <div class="box" style="font-weight:600;grid-row:1;grid-column: {{i+1}};{{ colors[i][0]}};{{ colors[i][1]}}; ">
               {{ total[i][0] }}<br> {{ total[i][1][0] }}<br><br>
             </div>
           {% endif %}
