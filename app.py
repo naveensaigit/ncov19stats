@@ -97,7 +97,7 @@ statewise(todaycases)
 def plotdata():
     plotdict={}
     for state in states:
-        res=db.session.execute("select cumconf,cumact,cumrec,cumdec,cumconf-dailyconf as oldconf,cumrec-dailyrec as oldrec,cumdec-dailydec as olddec,dailyconf,dailyrec,dailydec,date from state where statename='{0}'".format(state)).fetchall()
+        res=db.session.execute("select cumconf,cumact,cumrec,cumdec,cumconf-dailyconf as oldconf,cumrec-dailyrec as oldrec,cumdec-dailydec as olddec,dailyconf,dailyrec,dailydec,date from state where statename='{0}' order by date".format(state)).fetchall()
         res=np.array(res)
         val=[]
         for i in range(res.shape[1]):
@@ -127,8 +127,6 @@ def stats():
     grate={}
     r0={}
     for state in states:
-        if state=='Total':
-            continue
         res=db.session.execute("select cumconf,cumrec,cumdec from state where statename='{0}'".format(state)).fetchall()
         res=np.array(res)
         arr=res[:,0]

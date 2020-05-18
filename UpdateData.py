@@ -29,6 +29,7 @@ def update_cases():
     df=pd.DataFrame(df,columns=data["raw_data"][0].keys())'''
 
     db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=2)))
+    db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=1)))
     db.session.commit()
     
     time=[]

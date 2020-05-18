@@ -1,8 +1,38 @@
+#india{
+  width:600px;
+  height:750px;
+  margin:0px 0 0 20vw;
+}
+
+#colorbar{
+  width:500px;
+  height:15px;
+  margin:0 0 0 20vw;
+  background:linear-gradient(to right,#ffe3bd,#ffd8a3,#ffc77a,#ffba5c,#ffaf42,#ffa933,#ffa121,#ff9300);
+}
+
+#numbers{
+  width:500px;
+  height:15px;
+  margin:5px 0 25px 20vw;
+  display:grid;
+  font-size:0.8em;
+  grid-template-columns: 1fr 1fr;
+}
+
+#message{
+  width:750px;
+  height:25px;
+  padding-top:25px;
+  margin:0px 0 45px 15vw;
+  text-align:center;
+}
+
 #table{
   width:45vw;
   float:left;
   padding:20px 10px;
-  margin:60px 30px;
+  margin:30px 30px 60px;
   box-shadow:0 0 10px gray;
 }
 #total{
@@ -11,6 +41,17 @@
   grid-template-columns:repeat(4,1fr);
   grid-auto-rows:110px;
   line-height: 24px;
+  display:none;
+}
+#total1{
+  width:150px;
+  display: grid;
+  grid-gap:10px;
+  grid-template-columns:150px;
+  grid-auto-rows:100px;
+  line-height: 24px;
+  float:left;
+  margin:150px 0 0 70vw;
 }
 .box{
   display: flex;
@@ -24,8 +65,12 @@
   padding-right:10px;
 }
 
+.box:hover{
+  cursor: pointer;
+}
+
 #stategrid{
-  margin-top:20px;
+  margin-top:0px;
   display: grid;
   grid-gap:5px;
   grid-template-columns: repeat(5,1fr);
@@ -85,6 +130,27 @@ path:hover{
     margin-left:auto;
     margin-right:auto;
   }
+  #total1{
+    margin-left:850px;
+  }
+  #india,#numbers,#colorbar,#message{
+    margin-left:150px;
+  }
+}
+
+@media (max-width:1100px){
+  #total1{
+    display: none;
+  }
+  #total{
+    display:grid;
+  }
+  #stategrid{
+    margin-top:20px;
+  }
+  #india,#numbers,#colorbar,#message{
+    margin:0 auto;
+  }
 }
 
 @media (max-width:760px)
@@ -93,7 +159,7 @@ path:hover{
     float:none;
     margin-left:0;
     margin-right:0;
-    width:100vw;
+    width:99.5vw;
     padding-left:2px;
     padding-right:2px;
   }
@@ -110,6 +176,28 @@ path:hover{
     grid-gap:3px;
   }
   #plots{
-    width:100vw;
+    width:99vw;
+  }
+  #message{
+    width:600px;
+    height:50px;
+  }
+}
+
+@media (max-width:600px){
+  #india{
+    width:95vw;
+    height:118.75vw;
+  }
+  #colorbar{
+    width:80vw;
+    height:10px;
+  }
+  #numbers{
+    width:80vw;
+  }
+  #message{
+    width:320px;
+    height:50px;
   }
 }

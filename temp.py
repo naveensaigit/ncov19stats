@@ -1,4 +1,4 @@
-#Remove last row and add last
+#To make changes to the database
 
 from app import db
 from datetime import date,timedelta,datetime
@@ -19,24 +19,26 @@ today=(datetime.utcnow()).date()
 
 def update_cases():
     #Reading from API for today's new cases or update in last 2 days cases
-    with urllib.request.urlopen("https://api.covid19india.org/raw_data3.json") as url:
+    with urllib.request.urlopen("https://api.covid19india.org/raw_data4.json") as url:
         data = json.loads(url.read().decode())
 
     '''For testing
     df=[]    
     for row in data["raw_data"]:
         df.append(row.values())
-    df=pd.DataFrame(df,columns=data["raw_data"][0].keys())
+    df=pd.DataFrame(df,columns=data["raw_data"][0].keys())'''
 
     db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=1)))
-    db.session.commit()'''
+    db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=2)))
+    db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=3)))
+    #db.session.commit()
     
     time=[]
     for row in data['raw_data']:
         if row["dateannounced"]=="":
             continue
         dt=datetime.strptime(row["dateannounced"],'%d/%m/%Y').date()
-        if row["detectedstate"]=='Delhi' and row["currentstatus"]!='' and row["numcases"]!='' and today-timedelta(days=3)==dt:
+        if row["currentstatus"]!='' and row["numcases"]!='' and today-timedelta(days=3)==dt:
             time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
 
     print(len(time))
@@ -52,14 +54,14 @@ def update_cases():
             ind=2
         todaycases[stind[row[0]]][ind]+=row[3]
         todaycases[36][ind]+=row[3]
-    print('8th may',todaycases[7])
+    print('14th may',todaycases[20])
     res=db.session.execute("select * from state where date='{0}'".format(date.today()-timedelta(days=4)))
     for i in res:
         ind=stind[i.statename]
-        if i.statename=='Delhi':
-            db.session.add(state(i.statename,date.today()-timedelta(days=3),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
-            i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
-            i.cumdec+todaycases[ind][2]))
+        #if i.statename=='Maharashtra':
+        db.session.add(state(i.statename,date.today()-timedelta(days=3),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
+        i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
+        i.cumdec+todaycases[ind][2]))
     db.session.commit()
 
     time=[]
@@ -67,7 +69,7 @@ def update_cases():
         if row["dateannounced"]=="":
             continue
         dt=datetime.strptime(row["dateannounced"],'%d/%m/%Y').date()
-        if row["detectedstate"]=='Delhi' and row["currentstatus"]!='' and row["numcases"]!='' and date.today()-timedelta(days=2)==dt:
+        if row["currentstatus"]!='' and row["numcases"]!='' and date.today()-timedelta(days=2)==dt:
             time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
 
     todaycases=[[0,0,0] for i in range(len(states))]
@@ -81,14 +83,43 @@ def update_cases():
             ind=2
         todaycases[stind[row[0]]][ind]+=row[3]
         todaycases[36][ind]+=row[3]
-    print('9th may',todaycases[7])
+    print('15th may',todaycases[20])
     res=db.session.execute("select * from state where date='{0}'".format(date.today()-timedelta(days=3)))
     for i in res:
         ind=stind[i.statename]
-        if i.statename=='Delhi':
-            db.session.add(state(i.statename,date.today()-timedelta(days=2),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
-            i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
-            i.cumdec+todaycases[ind][2]))
+        #if i.statename=='Maharashtra':
+        db.session.add(state(i.statename,date.today()-timedelta(days=2),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
+        i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
+        i.cumdec+todaycases[ind][2]))
+    db.session.commit()
+
+    time=[]
+    for row in data['raw_data']:
+        if row["dateannounced"]=="":
+            continue
+        dt=datetime.strptime(row["dateannounced"],'%d/%m/%Y').date()
+        if row["currentstatus"]!='' and row["numcases"]!='' and date.today()-timedelta(days=1)==dt:
+            time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
+
+    todaycases=[[0,0,0] for i in range(len(states))]
+
+    for row in time:
+        if row[2]=='Hospitalized':
+            ind=0
+        elif row[2]=='Recovered':
+            ind=1
+        else:
+            ind=2
+        todaycases[stind[row[0]]][ind]+=row[3]
+        todaycases[36][ind]+=row[3]
+    print('16th may',todaycases[20])
+    res=db.session.execute("select * from state where date='{0}'".format(date.today()-timedelta(days=2)))
+    for i in res:
+        ind=stind[i.statename]
+        #if i.statename=='Maharashtra':
+        db.session.add(state(i.statename,date.today()-timedelta(days=1),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
+        i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
+        i.cumdec+todaycases[ind][2]))
     
     db.session.commit()
 update_cases()

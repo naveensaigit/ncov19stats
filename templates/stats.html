@@ -20,11 +20,10 @@
     <h1 style="margin-top:30px;text-align: center;">State-Wise Stats</h1>
     <div style="text-align: center;">
       <select id="drop" onchange="report(this.value)">
+        <option selected value="Total">Total</option>
         {% for i in drate.keys() %}
-          {% if i=='Karnataka' %}
-          <option selected value=" {{i}} "> {{ i }} </option>
-          {% else %}
-          <option value=" {{i}} "> {{ i }} </option>
+          {% if i!='Total' %}
+          <option value=" {{i}} "> {{ i }} </option>         
           {% endif %}
         {% endfor %}
     </select>

@@ -336,7 +336,7 @@ $(document).ready(function(){
     $('#32942').text(st);
     posDoubPlot();
     //Pie Plot
-    report('Karnataka');
+    report('Total');
     replaceText();
 
     if(isTouchDevice())
