@@ -271,6 +271,7 @@ $(document).ready(function(){
     var x=document.getElementsByClassName('state');
     for(var i=0;i<5;i++)
     x[i].style.fontWeight="900";
+    console.log('tests');
 });
 $(window).resize(function() {
     changeText($(window).width());

@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block css %}
-    <link href="/public/css/index.css?v={{refresh}}" rel='stylesheet'>
+    <link href="/public/css/index.css" rel='stylesheet'>
 {% endblock css %}
 {% block js %}
-  <script src="/public/js/index.js?v={{refresh}}"></script>
+  <script src="/public/js/index.js"></script>
 {% endblock js %}
 
 {% block content %}
@@ -12,7 +12,6 @@
       var script_id="14473";  //Script tag ID
       var plot_div_id="2657d1c2-7221-458f-908f-f6bc367374f7";  //Div id of bk-root div
       var data_root_id="14120";
-      changeMap("Confirmed");
 
       $(document).ready(function(){
         var st=$('#'+script_id).text();
@@ -23,6 +22,7 @@
       disableToolBar();
       else
       showPlot();
+      changeMap("Confirmed");
       });
       
       function report(state){
