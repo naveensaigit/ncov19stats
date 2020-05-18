@@ -8,6 +8,7 @@ import urllib
 import json
 
 app=Flask(__name__,static_url_path='/public')
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SECRET_KEY']='nlakengdpovhidgbarabgrk0x1'
 app.config['SQLALCHEMY_DATABASE_URI']='postgres://vznhvokezemmep:42d3129396b3c9755ca63f9ff2eed1c0ca0dc86a3e20a62164430e239cf18a96@ec2-3-216-129-140.compute-1.amazonaws.com:5432/d4lpe368cptbgn'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
@@ -183,11 +184,12 @@ for i in range(1,len(numbers)):
 colors=[['color:rgb(255, 123, 0)','background-color:rgba(255, 123, 0,0.2)'],['color:rgb(255, 0, 0)','background-color:rgba(255, 0, 0,0.2)'],
 ['color:rgb(50,205,50)','background-color:rgba(50,205,50,0.2)'],['color:rgb(77, 75, 75)','background-color:rgba(77, 75, 75,0.2)']]
 
+refresh=datetime.now()
 #---------------------------------Queries-------------------------------------------------------
 
 @app.route('/')
 def home():
-    return render_template('index.html',numbers=numbers,total=total,plotdict=plotdict,states=states,colors=colors,end=end)
+    return render_template('index.html',numbers=numbers,total=total,plotdict=plotdict,states=states,colors=colors,end=end,refresh=refresh)
 
 @app.route('/SIRD')
 def sird():

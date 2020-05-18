@@ -5,9 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- Start of WebFreeCounter Code -->
-    <a href="https://www.webfreecounter.com/" target="_blank"><img style="display:none;" src="https://www.webfreecounter.com/hit.php?id=gaacqa&nd=7&style=14" border="0" alt="hit counter"></a>
-    <!-- End of WebFreeCounter Code -->
+    <!-- hitwebcounter Code START
+<a href="https://www.hitwebcounter.com" target="_blank">
+  <img src="https://hitwebcounter.com/counter/counter.php?page=7349505&style=0036&nbdigits=5&type=page&initCount=-10" title="Web Counter" Alt="counter free"   border="0" >
+  </a>      -->
 
     <!-- Page Icon -->
     <link rel="icon" href="{{ url_for('static',filename='images/virus.webp') }}">
@@ -15,7 +16,7 @@
     {% block css %}
     {% endblock css %}
 
-    <link href="{{url_for('static',filename='css/layout.css')}}" rel='stylesheet'>
+    <link href="/public/css/layout.css?v={{refresh}}" rel='stylesheet'>
     <!-- Google font -->
     <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
 
@@ -44,7 +45,6 @@
     {% else %}
         <title>COVID19 - Stats</title>
     {% endif %}
-
   </head>
   <body>
     <div class="logo">

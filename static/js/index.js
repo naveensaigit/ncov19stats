@@ -199,7 +199,6 @@ function changeMap(status)
           }
         }
         var val=$.map(states, function(value, key) { return parseInt(value[ind]) });
-        console.log(val);
         data=JSON.parse($("#1936").text());
         var d=data["45e132a7-a530-4d0b-ac49-8357983a6781"]["roots"]["references"];
         val=val.slice(0,37);
