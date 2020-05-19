@@ -171,7 +171,7 @@ function changeMap(status)
   'Uttar Pradesh': [0,0,0,0], 'Uttarakhand': [0,0,0,0],  'West Bengal': [0,0,0,0],  'Odisha': [0,0,0,0],  'Andhra Pradesh': [0,0,0,0],  'Jammu and Kashmir': [0,0,0,0],  'Ladakh': [0,0,0,0]};
   var indpal={"Confirmed":[0,["#ffe3bd","#ffd8a3","#ffc77a","#ffba5c","#ffaf42","#ffa933","#ffa121","#ff9300"]],
               "Active":[1,["#fff0f0", "#ffdbdb", "#ffd4d4", "#ff9696", "#ff6666", "#fa4848", "#ff3636", "#ff0000"]],
-              "Recovered":[2,["#ecffeb","#d3ffcf","#adffa6","#93ff8a","#70ff63","#62ff54","#3aff29","#14ff00"]],
+              "Recovered":[2,["rgba(0,195,0,0.125)","rgba(0,195,0,0.25)","rgba(0,195,0,0.375)","rgba(0,195,0,0.5)","rgba(0,195,0,0.625)","rgba(0,195,0,0.75)","rgba(0,195,0,0.875)","rgba(0,195,0,1)"]],
               "Deceased":[3,["#d2d4d2","#bbbdbb","#a4a6a4","#8d8f8d","#757875","#646664","#525452","#414241"]]
               }
   var ind=indpal[status][0];
