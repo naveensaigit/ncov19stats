@@ -179,6 +179,8 @@ function changeMap(status)
         api=data.statewise;
         for(var i=1;i<api.length;i++)
         {    
+          if(api[i]["state"]=="State Unassigned")
+          continue;
           if(api[i]["state"]!="Dadra and Nagar Haveli and Daman and Diu")
           {
             states[api[i]["state"]][0]+=api[i]["confirmed"];

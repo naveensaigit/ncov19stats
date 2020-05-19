@@ -27,21 +27,22 @@
       
       function report(state){
         {% for st in states %}
-          var st="{{st}}";
-          state=state.trim();
-          if(st.localeCompare(state)==0)
-          {
-            changePlot({{ plotdict[st][0]|safe }},{{ plotdict[st][1]|safe }},{{ plotdict[st][2]|safe }},
-            {{ plotdict[st][3]|safe }}, {{ plotdict[st][4]|safe }},{{ plotdict[st][5]|safe }},
-            {{ plotdict[st][6]|safe }},{{ plotdict[st][7]|safe }},{{ plotdict[st][8]|safe }},
-            {{ plotdict[st][9]|safe }},{{ plotdict[st][10]|safe }},{{ plotdict[st][11]|safe }});
-          }
+          {% if st!='State Unassigned' %}
+            var st="{{st}}";
+            state=state.trim();
+            if(st.localeCompare(state)==0)
+            {
+              changePlot({{ plotdict[st][0]|safe }},{{ plotdict[st][1]|safe }},{{ plotdict[st][2]|safe }},
+              {{ plotdict[st][3]|safe }}, {{ plotdict[st][4]|safe }},{{ plotdict[st][5]|safe }},
+              {{ plotdict[st][6]|safe }},{{ plotdict[st][7]|safe }},{{ plotdict[st][8]|safe }},
+              {{ plotdict[st][9]|safe }},{{ plotdict[st][10]|safe }},{{ plotdict[st][11]|safe }});
+            }
+          {% endif %}
         {% endfor %}
         return state;
       }
       
     </script>
-
     <h1 style="text-align: center;margin-top:35px;">India Cases Heat Map</h1>
 
     <div id="total1">
@@ -119,7 +120,7 @@
       <div>
         <select onchange="report(this.value)">
           <option value="Total" >Total</option>
-          {% for i in range(states|length -1 ) %}
+          {% for i in range(states|length - 2 ) %}
           <option value=" {{states[i]}} "> {{ states[i] }} </option>
           {% endfor %}
         </select>

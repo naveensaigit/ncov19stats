@@ -21,7 +21,7 @@ db=SQLAlchemy(app)
 
 #---------------------------------Queries-------------------------------------------------------
 
-states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Delhi','Dadra and Nagar Haveli and Daman and Diu','Goa', 'Gujarat',  'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka',    'Kerala', 'Ladakh','Lakshadweep' , 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',    'Mizoram', 'Nagaland','Odisha', 'Puducherry', 'Punjab', 'Rajasthan','Sikkim',    'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',    'West Bengal','Total']
+states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Delhi','Dadra and Nagar Haveli and Daman and Diu','Goa', 'Gujarat',  'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka',    'Kerala', 'Ladakh','Lakshadweep' , 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',    'Mizoram', 'Nagaland','Odisha', 'Puducherry', 'Punjab', 'Rajasthan','Sikkim',    'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal','State Unassigned','Total']
 stind=pd.Series(range(len(states)),states)
 
 def datechange(date):
@@ -60,7 +60,7 @@ def read_today_api():
         else:
             ind=2
         todaycases[stind[row[0]]][ind]+=row[3]
-        todaycases[36][ind]+=row[3]
+        todaycases[-1][ind]+=row[3]
     return todaycases
 
 todaycases=read_today_api()
@@ -92,22 +92,23 @@ def statewise(todaycases):
                 temp=numbers[i]
                 numbers[i]=numbers[j]
                 numbers[j]=temp
-    numbers.append(res)
+    numbers.append(res)     
 statewise(todaycases)
 
 def plotdata():
     plotdict={}
     for state in states:
-        res=db.session.execute("select cumconf,cumact,cumrec,cumdec,cumconf-dailyconf as oldconf,cumrec-dailyrec as oldrec,cumdec-dailydec as olddec,dailyconf,dailyrec,dailydec,date from state where statename='{0}' order by date".format(state)).fetchall()
-        res=np.array(res)
-        val=[]
-        for i in range(res.shape[1]):
-            if i==res.shape[1]-1:
-                val.append(list(map(nptodt,res[:,i])))
-            else:
-                val.append(list(res[:,i]))
-        val.append([str(x) for x in range(1,res.shape[0]+1)])
-        plotdict.update({state:val})
+        if state!='State Unassigned':
+            res=db.session.execute("select cumconf,cumact,cumrec,cumdec,cumconf-dailyconf as oldconf,cumrec-dailyrec as oldrec,cumdec-dailydec as olddec,dailyconf,dailyrec,dailydec,date from state where statename='{0}' order by date".format(state)).fetchall()
+            res=np.array(res)
+            val=[]
+            for i in range(res.shape[1]):
+                if i==res.shape[1]-1:
+                    val.append(list(map(nptodt,res[:,i])))
+                else:
+                    val.append(list(res[:,i]))
+            val.append([str(x) for x in range(1,res.shape[0]+1)])
+            plotdict.update({state:val})
     return plotdict
 plotdict=plotdata()
 
@@ -128,52 +129,53 @@ def stats():
     grate={}
     r0={}
     for state in states:
-        res=db.session.execute("select cumconf,cumrec,cumdec from state where statename='{0}'".format(state)).fetchall()
-        res=np.array(res)
-        arr=res[:,0]
-        if(int(arr[-1])==0):
-            continue
-        arr1=res[:,1]
-        arr2=res[:,2]
-        cdb=np.zeros(len(arr),dtype=int)
-        rdb=np.zeros(len(arr),dtype=int)
-        ddb=np.zeros(len(arr),dtype=int)
-        for i in range(len(arr)):
-            for j in range(i):
-                if float(arr[j])>=float(arr[i])/2:
-                    cdb[i]+=(i-j)
-                    break
-            for j in range(i):
-                if float(arr1[j])>=float(arr1[i])/2:
-                    rdb[i]+=(i-j)
-                    break
-            for j in range(i):
-                if float(arr2[j])>=float(arr2[i])/2:
-                    ddb[i]+=(i-j)
-                    break
-        temp=[]
-        for i in cdb:
-            if i:
-                temp.append(1+11.5*0.693/i)
-            else:
-                temp.append(1)
-        r0.update({state:temp})
-        drate.update({state:[list(cdb),list(rdb),list(ddb)]})
-        temp=[]
-        gry=(arr[-1]-arr[-2])/arr[-2]
-        grdby=(arr[-2]-arr[-3])/arr[-3]
-        temp.append([gry,gry-grdby])
-        gry=(arr1[-1]-arr1[-2])/arr1[-2]
-        grdby=(arr1[-2]-arr1[-3])/arr1[-3]
-        temp.append([gry,gry-grdby])
-        gry=0
-        grdby=0
-        if(int(arr2[-2])!=0 and int(arr2[-1])!=0):
-            gry=(arr2[-1]-arr2[-2])/arr2[-2]
-        if(int(arr2[-3])!=0 and int(arr2[-2]!=0)):
-            grdby=(arr2[-2]-arr2[-3])/arr2[-3]
-        temp.append([gry,gry-grdby])
-        grate.update({state:temp})
+        if state!='State Unassigned':
+            res=db.session.execute("select cumconf,cumrec,cumdec from state where statename='{0}'".format(state)).fetchall()
+            res=np.array(res)
+            arr=res[:,0]
+            if(int(arr[-1])==0):
+                continue
+            arr1=res[:,1]
+            arr2=res[:,2]
+            cdb=np.zeros(len(arr),dtype=int)
+            rdb=np.zeros(len(arr),dtype=int)
+            ddb=np.zeros(len(arr),dtype=int)
+            for i in range(len(arr)):
+                for j in range(i):
+                    if float(arr[j])>=float(arr[i])/2:
+                        cdb[i]+=(i-j)
+                        break
+                for j in range(i):
+                    if float(arr1[j])>=float(arr1[i])/2:
+                        rdb[i]+=(i-j)
+                        break
+                for j in range(i):
+                    if float(arr2[j])>=float(arr2[i])/2:
+                        ddb[i]+=(i-j)
+                        break
+            temp=[]
+            for i in cdb:
+                if i:
+                    temp.append(1+11.5*0.693/i)
+                else:
+                    temp.append(1)
+            r0.update({state:temp})
+            drate.update({state:[list(cdb),list(rdb),list(ddb)]})
+            temp=[]
+            gry=(arr[-1]-arr[-2])/arr[-2]
+            grdby=(arr[-2]-arr[-3])/arr[-3]
+            temp.append([gry,gry-grdby])
+            gry=(arr1[-1]-arr1[-2])/arr1[-2]
+            grdby=(arr1[-2]-arr1[-3])/arr1[-3]
+            temp.append([gry,gry-grdby])
+            gry=0
+            grdby=0
+            if(int(arr2[-2])!=0 and int(arr2[-1])!=0):
+                gry=(arr2[-1]-arr2[-2])/arr2[-2]
+            if(int(arr2[-3])!=0 and int(arr2[-2]!=0)):
+                grdby=(arr2[-2]-arr2[-3])/arr2[-3]
+            temp.append([gry,gry-grdby])
+            grate.update({state:temp})
     return drate,grate,r0
 drate,grate,r0=stats()
 
