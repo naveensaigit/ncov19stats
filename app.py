@@ -86,7 +86,7 @@ def statewise(todaycases):
         numbers.append([i.statename,[i.cumconf+temp[0],temp[0]],[i.cumact+temp[0]-temp[1]-temp[2]],[i.cumrec+temp[1],temp[1]],[i.cumdec+temp[2],temp[2]]])
     res=numbers[1]
     del numbers[1]
-    numbers.append(["State Unassigned",[814,814],[814],[0,0],[0,0]])
+    #numbers.append(["State Unassigned",[814,0],[814],[0,0],[0,0]])
     for i in range(1,len(numbers)):
         for j in range(1,len(numbers)):
             if numbers[i][1][0]>numbers[j][1][0]:
