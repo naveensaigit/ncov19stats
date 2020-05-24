@@ -14,6 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI']='postgres://vznhvokezemmep:42d3129396b3c97
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
 today=(datetime.utcnow()).date()
+#today-=timedelta(days=1)
 n=(np.datetime64(today)-np.datetime64('2020-01-30')-1)/np.timedelta64(1,'D')
 end=1580342400000.0+n*86400000
 
@@ -34,7 +35,7 @@ def nptodt(dt):
 
 def read_today_api():
     #Reading from API for today's new cases
-    with urllib.request.urlopen("https://api.covid19india.org/raw_data4.json") as url:
+    with urllib.request.urlopen("https://api.covid19india.org/raw_data5.json") as url:
         data = json.loads(url.read().decode())
 
     #For testing

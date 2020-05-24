@@ -9,7 +9,7 @@ states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh',
  'Kerala', 'Ladakh','Lakshadweep' , 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',
  'Mizoram', 'Nagaland','Odisha', 'Puducherry', 'Punjab', 'Rajasthan','Sikkim',
  'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',
- 'West Bengal','Total']
+ 'West Bengal','State Unassigned','Total']
 stind=pd.Series(range(len(states)),states)
 
 stdate=np.datetime64('2020-01-30')
@@ -41,14 +41,14 @@ time=[]
 needed=["dateannounced","detectedstate"]
 for row in data['raw_data']:
     if row["detectedstate"]!='':
-        time.append([row["detectedstate"],datechange(row["dateannounced"])])
+        time.append([row["detectedstate"],datechange(row["dateannounced"]),int(row["numcases"])])
 
 with urllib.request.urlopen("https://api.covid19india.org/raw_data2.json") as url:
     data = json.loads(url.read().decode())
     
 for row in data['raw_data']:
     if row["detectedstate"]!='':
-        time.append([row["detectedstate"],datechange(row["dateannounced"])])
+        time.append([row["detectedstate"],datechange(row["dateannounced"]),int(row["numcases"])])
     
 with urllib.request.urlopen("https://api.covid19india.org/deaths_recoveries.json") as url:
     data = json.loads(url.read().decode())
@@ -67,7 +67,7 @@ for i in range(len(states)):
         timeseries[i].append([0,0,0,0,0,0,0])
                              
 for row in time:
-        timeseries[stind[row[0]]][int(str(row[1]-stdate).split()[0])][0]+=1
+        timeseries[stind[row[0]]][int(str(row[1]-stdate).split()[0])][0]+=row[2]
         
 for row in rec:
     if row[2]=='Recovered':
@@ -78,12 +78,14 @@ for row in rec:
 with urllib.request.urlopen("https://api.covid19india.org/raw_data3.json") as url:
     data = json.loads(url.read().decode())
     
-df=[]    
-for row in data["raw_data"]:
-    df.append(row.values())
-df=pd.DataFrame(df,columns=data["raw_data"][0].keys())
-
 time=[]
+for row in data['raw_data']:
+    if row["detectedstate"]!='' and row["currentstatus"]!='' and row["numcases"]!='':
+        time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
+        
+with urllib.request.urlopen("https://api.covid19india.org/raw_data4.json") as url:
+    data = json.loads(url.read().decode())
+    
 for row in data['raw_data']:
     if row["detectedstate"]!='' and row["currentstatus"]!='' and row["numcases"]!='':
         time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
