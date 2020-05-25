@@ -14,7 +14,7 @@
     margin:15px;
     font-weight:lighter;
     font-size:0.9em;
-    height:1220px;
+    height:1280px;
 }
 
 #predplots{
@@ -57,6 +57,10 @@
     width:55%;
     margin:0 auto;
     margin-bottom:30px;
+}
+#update{
+    margin:-25px 0 10px 0px;
+    text-align: center;
 }
 
 @media (max-width:1500px){
