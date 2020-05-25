@@ -1,6 +1,20 @@
 '''
 Other parameters which fit a good model as well
 beta, gamma, delta = 0.205, 1./11, 0.0055 dRdt=0.5*gamma*I
+
+Prediction v 1.0
+beta, gamma, delta = 0.2144, 1./20, 0.003
+if t<=91:
+                dSdt = -beta * math.exp(-t**1.05/200)* S * I / N
+                dIdt = beta * math.exp(-t**1.05/200) *S * I / N - gamma * I - delta*I
+        elif t>91 and t<=131:
+            dSdt = -beta * math.exp(-t**1.1/200)* S * I / N
+            dIdt = beta * math.exp(-t**1.1/200) *S * I / N - gamma * I - delta*I
+        else:
+            dSdt = -beta * math.exp(-t/350)* S * I / N
+            dIdt = beta * math.exp(-t/350) *S * I / N - gamma * I - delta*I
+        dRdt = 0.72*gamma*I
+        dDdt = delta * I
 '''
 def ret():
     import urllib.request, json 
@@ -41,16 +55,18 @@ def ret():
     def deriv(y, t, N, beta, gamma, delta):
         S, I, R, D = y
         if t<=91:
-                dSdt = -beta * math.exp(-t**1.05/200)* S * I / N
-                dIdt = beta * math.exp(-t**1.05/200) *S * I / N - gamma * I - delta*I
-        elif t>91 and t<=131:
-            dSdt = -beta * math.exp(-t**1.1/200)* S * I / N
-            dIdt = beta * math.exp(-t**1.1/200) *S * I / N - gamma * I - delta*I
+            dSdt = -beta * math.exp(-t**1.05/200)* S * I / N
+            dIdt = beta * math.exp(-t**1.05/200) *S * I / N - gamma * I - delta*I
+            dRdt = math.exp(-t**1.05/200)*gamma*I
+        elif t>91 and t<=121:
+            dSdt = -beta * math.exp(-t**1.09/200)* S * I / N
+            dIdt = beta * math.exp(-t**1.09/200) *S * I / N - gamma * I - delta*I
+            dRdt = math.exp(-t**0.8/200)*gamma*I
         else:
-            dSdt = -beta * math.exp(-t/350)* S * I / N
-            dIdt = beta * math.exp(-t/350) *S * I / N - gamma * I - delta*I
-        dRdt = 0.72*gamma*I
-        dDdt = delta * I
+            dSdt = -beta * math.exp(-t**1.05/200)* S * I / N
+            dIdt = beta * math.exp(-t**1.05/200) *S * I / N - gamma * I - delta*I
+            dRdt = math.exp(-t**0.55/200)*gamma*I
+        dDdt = 0.9*delta * I
         return dSdt, dIdt, dRdt, dDdt
 
     # Initial conditions vector

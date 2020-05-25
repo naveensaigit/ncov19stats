@@ -164,12 +164,23 @@ def stats():
             r0.update({state:temp})
             drate.update({state:[list(cdb),list(rdb),list(ddb)]})
             temp=[]
-            gry=(arr[-1]-arr[-2])/arr[-2]
-            grdby=(arr[-2]-arr[-3])/arr[-3]
+
+            gry=0
+            grdby=0
+            if(int(arr[-2])!=0 and int(arr[-1])!=0):
+                gry=(arr[-1]-arr[-2])/arr[-2]
+            if(int(arr[-3])!=0 and int(arr[-2]!=0)):
+                grdby=(arr[-2]-arr[-3])/arr[-3]
             temp.append([gry,gry-grdby])
-            gry=(arr1[-1]-arr1[-2])/arr1[-2]
-            grdby=(arr1[-2]-arr1[-3])/arr1[-3]
+
+            gry=0
+            grdby=0
+            if(int(arr1[-2])!=0 and int(arr1[-1])!=0):
+                gry=(arr1[-1]-arr1[-2])/arr1[-2]
+            if(int(arr1[-3])!=0 and int(arr1[-2]!=0)):
+                grdby=(arr1[-2]-arr1[-3])/arr1[-3]
             temp.append([gry,gry-grdby])
+
             gry=0
             grdby=0
             if(int(arr2[-2])!=0 and int(arr2[-1])!=0):
