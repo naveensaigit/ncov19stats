@@ -59,11 +59,14 @@
     margin-bottom:30px;
 }
 #update{
-    margin:-25px 0 10px 0px;
-    text-align: center;
+    margin:-25px 0 10px 30px;
+    text-align: left;
 }
 
 @media (max-width:1500px){
+    #update{
+        text-align: center;
+    }
     h1{
         text-align: center;
     }
