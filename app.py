@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI']='postgres://psiqaapsokmaab:d18b45eeb3ebcf3
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 
 today=(datetime.utcnow()).date()
-# today-=timedelta(days=1)
+#today-=timedelta(days=1)
 n=(np.datetime64(today)-np.datetime64('2020-01-30')-1)/np.timedelta64(1,'D')
 end=1580342400000.0+n*86400000
 

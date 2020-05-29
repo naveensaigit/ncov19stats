@@ -15,7 +15,7 @@ def datechange(date):
 
 states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh','Assam', 'Bihar', 'Chandigarh', 'Chhattisgarh', 'Delhi','Dadra and Nagar Haveli and Daman and Diu','Goa', 'Gujarat',  'Haryana', 'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka',    'Kerala', 'Ladakh','Lakshadweep' , 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya',    'Mizoram', 'Nagaland','Odisha', 'Puducherry', 'Punjab', 'Rajasthan','Sikkim',    'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand','West Bengal','State Unassigned','Total']
 stind=pd.Series(range(len(states)),states)
-today=(datetime.utcnow()-timedelta(days=1)).date()
+today=(datetime.utcnow()).date()
 
 #Reading from API for today's new cases or update in last 2 days cases
 with urllib.request.urlopen("https://api.covid19india.org/raw_data5.json") as url:
@@ -27,9 +27,39 @@ for row in data["raw_data"]:
     df.append(row.values())
 df=pd.DataFrame(df,columns=data["raw_data"][0].keys())'''
 
-# db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=2)))
-# db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=1)))
-# db.session.commit()
+
+db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=3)))
+db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=2)))
+db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=1)))
+db.session.commit()
+
+time=[]
+for row in data['raw_data']:
+    if row["dateannounced"]=="":
+        continue
+    dt=datetime.strptime(row["dateannounced"],'%d/%m/%Y').date()
+    if row["detectedstate"]!='' and row["currentstatus"]!='' and row["numcases"]!='' and today-timedelta(days=3)==dt:
+        time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
+
+    todaycases=[[0,0,0] for i in range(len(states))]
+
+for row in time:
+    if row[2]=='Hospitalized':
+        ind=0
+    elif row[2]=='Recovered':
+        ind=1
+    else:
+        ind=2
+    todaycases[stind[row[0]]][ind]+=row[3]
+    todaycases[-1][ind]+=row[3]
+
+res=db.session.execute("select * from state where date='{0}'".format(today-timedelta(days=4)))
+for i in res:
+    ind=stind[i.statename]
+    db.session.add(state(i.statename,today-timedelta(days=3),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
+    i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
+    i.cumdec+todaycases[ind][2]))
+db.session.commit()
 
 time=[]
 for row in data['raw_data']:
@@ -83,35 +113,6 @@ res=db.session.execute("select * from state where date='{0}'".format(today-timed
 for i in res:
     ind=stind[i.statename]
     db.session.add(state(i.statename,today-timedelta(days=1),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
-    i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
-    i.cumdec+todaycases[ind][2]))
-
-db.session.commit()
-
-time=[]
-for row in data['raw_data']:
-    if row["dateannounced"]=="":
-        continue
-    dt=datetime.strptime(row["dateannounced"],'%d/%m/%Y').date()
-    if row["detectedstate"]!='' and row["currentstatus"]!='' and row["numcases"]!='' and today-timedelta(days=0)==dt:
-        time.append([row["detectedstate"],datechange(row["dateannounced"]),row["currentstatus"],int(row["numcases"])])
-
-todaycases=[[0,0,0] for i in range(len(states))]
-
-for row in time:
-    if row[2]=='Hospitalized':
-        ind=0
-    elif row[2]=='Recovered':
-        ind=1
-    else:
-        ind=2
-    todaycases[stind[row[0]]][ind]+=row[3]
-    todaycases[-1][ind]+=row[3]
-
-res=db.session.execute("select * from state where date='{0}'".format(today-timedelta(days=1)))
-for i in res:
-    ind=stind[i.statename]
-    db.session.add(state(i.statename,today-timedelta(days=0),todaycases[ind][0],todaycases[ind][1],todaycases[ind][2],
     i.cumconf+todaycases[ind][0],i.cumact+todaycases[ind][0]-todaycases[ind][1]-todaycases[ind][2],i.cumrec+todaycases[ind][1],
     i.cumdec+todaycases[ind][2]))
 
