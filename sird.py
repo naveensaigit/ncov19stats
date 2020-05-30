@@ -58,7 +58,7 @@ def ret():
             dSdt = -beta * math.exp(-t**1.05/200)* S * I / N
             dIdt = beta * math.exp(-t**1.05/200) *S * I / N - gamma * I - delta*I
             dRdt = math.exp(-t**1.05/200)*gamma*I
-        elif t>91 and t<=121:
+        elif t>91 and t<=119:
             dSdt = -beta * math.exp(-t**1.09/200)* S * I / N
             dIdt = beta * math.exp(-t**1.09/200) *S * I / N - gamma * I - delta*I
             dRdt = math.exp(-t**0.8/200)*gamma*I
