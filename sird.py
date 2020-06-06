@@ -58,15 +58,17 @@ def ret():
             dSdt = -beta * math.exp(-t**1.05/200)* S * I / N
             dIdt = beta * math.exp(-t**1.05/200) *S * I / N - gamma * I - delta*I
             dRdt = math.exp(-t**1.05/200)*gamma*I
+            dDdt = math.exp(-t**0.75/200)*delta * I
         elif t>91 and t<=119:
             dSdt = -beta * math.exp(-t**1.09/200)* S * I / N
             dIdt = beta * math.exp(-t**1.09/200) *S * I / N - gamma * I - delta*I
             dRdt = math.exp(-t**0.8/200)*gamma*I
+            dDdt = math.exp(-t**0.7/200)*delta * I
         else:
             dSdt = -beta * math.exp(-t**1.05/200)* S * I / N
             dIdt = beta * math.exp(-t**1.05/200) *S * I / N - gamma * I - delta*I
             dRdt = math.exp(-t**0.55/200)*gamma*I
-        dDdt = 0.9*delta * I
+            dDdt = math.exp(-t**0.9/200)*delta * I
         return dSdt, dIdt, dRdt, dDdt
 
     # Initial conditions vector
