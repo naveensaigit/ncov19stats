@@ -1,5 +1,3 @@
-#Remove last row and add last
-
 from app import db
 from datetime import date,timedelta,datetime
 import pandas as pd
@@ -18,7 +16,7 @@ stind=pd.Series(range(len(states)),states)
 today=(datetime.utcnow()).date()
 
 #Reading from API for today's new cases or update in last 2 days cases
-with urllib.request.urlopen("https://api.covid19india.org/raw_data5.json") as url:
+with urllib.request.urlopen("https://api.covid19india.org/raw_data6.json") as url:
     data = json.loads(url.read().decode())
 
 '''For testing
@@ -27,7 +25,7 @@ for row in data["raw_data"]:
     df.append(row.values())
 df=pd.DataFrame(df,columns=data["raw_data"][0].keys())'''
 
-ndays=3 #Update data for cases of last n days
+ndays=1 #Update data for cases of last n days
 
 for i in range(ndays,0,-1):
     db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=i)))
