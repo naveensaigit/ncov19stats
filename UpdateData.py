@@ -15,7 +15,6 @@ states=['Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh','As
 stind=pd.Series(range(len(states)),states)
 today=(datetime.utcnow()).date()
 
-#Reading from API for today's new cases or update in last 2 days cases
 with urllib.request.urlopen("https://api.covid19india.org/raw_data6.json") as url:
     data = json.loads(url.read().decode())
 
@@ -25,7 +24,7 @@ for row in data["raw_data"]:
     df.append(row.values())
 df=pd.DataFrame(df,columns=data["raw_data"][0].keys())'''
 
-ndays=1 #Update data for cases of last n days
+ndays=2 #Update data for cases of last n days
 
 for i in range(ndays,0,-1):
     db.session.execute("delete from state where date='{0}'".format(today-timedelta(days=i)))
